@@ -151,10 +151,10 @@ const Cart = () => {
     const [stripeToken, setStripeToken] = useState(null);
 
     const onToken = (token) => {
+        console.log(token)
         setStripeToken(token);
     }
 
-    console.log(stripeToken);
 
     return (
         <Container>

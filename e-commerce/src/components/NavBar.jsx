@@ -4,9 +4,9 @@ import SearchIcon from '@material-ui/icons/Search';
 import Badge from '@material-ui/core/Badge';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import { mobile } from '../responsive';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { logout } from '../redux/userRedux';
 
 const Container = styled.div`
     height:60px;
@@ -69,6 +69,18 @@ const MenuItem = styled.div`
 const NavBar = () => {
 
     const quantity = useSelector(state => state.cart.quantity);
+    const currentUser = useSelector(state => state.user.currentUser);
+    const userToken = currentUser?.token;
+    const navigate = useNavigate();
+
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        dispatch(logout());
+        localStorage.removeItem("persist:root");
+        navigate('/login');
+
+    }
 
     return (
         <Container>
@@ -81,22 +93,37 @@ const NavBar = () => {
                     </SearchContainer>
                 </Left>
                 <Center>
-                        <Logo>Keema</Logo>
+                    <Logo>Keema</Logo>
                 </Center>
                 <Right>
-                    <Link to='/register'>
-                        <MenuItem>Register</MenuItem>
-                    </Link>
-                    <Link to='/login'>
-                        <MenuItem>Sign In</MenuItem>
-                    </Link>
-                    <Link to='/cart'>
-                        <MenuItem>
-                            <Badge color="secondary" badgeContent={quantity}>
-                                <ShoppingCartIcon />
-                            </Badge>
-                        </MenuItem>
-                    </Link>
+                    {
+                        userToken ?
+                            (
+                                <>
+                                    <Link to='/cart'>
+                                        <MenuItem>
+                                            <Badge color="secondary" badgeContent={quantity}>
+                                                <ShoppingCartIcon />
+                                            </Badge>
+                                        </MenuItem>
+                                    </Link>
+                                    <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                                </>
+                            ) :
+                            (
+                                <>
+                                    <Link to='/register'>
+                                        <MenuItem>Register</MenuItem>
+                                    </Link>
+                                    <Link to='/login'>
+                                        <MenuItem>Sign In</MenuItem>
+                                    </Link>
+
+                                </>
+                            )
+                    }
+
+
                 </Right>
             </Wrapper>
         </Container>

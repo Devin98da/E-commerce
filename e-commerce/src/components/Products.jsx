@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components';
 import { popularProducts } from '../data';
 import ProductItem from './ProductItem';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from '../redux/productsRedux';
 
 const Container = styled.div`
     padding: 20px;
@@ -12,26 +13,31 @@ const Container = styled.div`
 `
 
 const Products = ({ cat, filters, sort }) => {
-    const [products, setProducts] = useState([]);
+    // const [products, setProducts] = useState([]);
     const [filterProdcuts, setFilterProdcuts] = useState([]);
+    const dispatch = useDispatch();
+    const { products, isFetching, error } = useSelector((state) => state.products);
+
+    console.log(products)
 
     useEffect(() => {
 
-        const getProducts = async () => {
-            try {
-                const res = await axios.get(
-                    cat ?
-                        `http://localhost:5000/api/products/?category=${cat}`
-                        :
-                        'http://localhost:5000/api/products');
-                setProducts(res.data);
-            } catch (error) {
-                console.log(error)
-            }
-        }
+        dispatch(fetchProducts());
+        // const getProducts = async () => {
+        //     try {
+        //         const res = await axios.get(
+        //             cat ?
+        //                 `http://localhost:5000/api/products/?category=${cat}`
+        //                 :
+        //                 'http://localhost:5000/api/products');
+        //         setProducts(res.data);
+        //     } catch (error) {
+        //         console.log(error)
+        //     }
+        // }
 
-        getProducts();
-    }, [cat])
+        // getProducts();
+    }, [dispatch])
 
     useEffect(() => {
 

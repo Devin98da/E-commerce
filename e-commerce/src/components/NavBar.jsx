@@ -7,6 +7,7 @@ import { mobile } from '../responsive';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../redux/userRedux';
+import SearchInput from './SearchInput';
 
 const Container = styled.div`
     height:60px;
@@ -87,10 +88,7 @@ const NavBar = () => {
             <Wrapper>
                 <Left>
                     <Language>EN</Language>
-                    <SearchContainer>
-                        <Input placeholder='Search' />
-                        <SearchIcon style={{ color: 'gray', fontSize: 16 }} />
-                    </SearchContainer>
+                    <SearchInput/>
                 </Left>
                 <Center>
                     <Logo>Keema</Logo>

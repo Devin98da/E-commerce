@@ -12,13 +12,28 @@ const Container = styled.div`
     justify-content:space-between;
 `
 
-const Products = ({ cat, filters, sort }) => {
+const NoProductsMessage = styled.p`
+  font-size: 1.8rem;
+  color: #888;
+  text-align: center;
+  width: 100%;
+  margin: 40px 0;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-weight: 500;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+
+const Products = ({ cat, filters, sort, search }) => {
     // const [products, setProducts] = useState([]);
     const [filterProdcuts, setFilterProdcuts] = useState([]);
     const dispatch = useDispatch();
     const { products, isFetching, error } = useSelector((state) => state.products);
 
-    console.log(products)
+    // console.log(products)
 
     useEffect(() => {
 
@@ -41,15 +56,38 @@ const Products = ({ cat, filters, sort }) => {
 
     useEffect(() => {
 
-        cat && setFilterProdcuts(
-            products.filter(item =>
-                Object.entries(filters).every(([key, value]) => {
-                    return item[key].includes(value);
-                })
-            )
-        )
+        let tempProducts = products;
 
-    }, [cat, filters, products])
+        if (cat && cat !== 'search') {
+            tempProducts = tempProducts.filter(item =>
+                item.categories.some(catItem => (
+                    catItem.toLowerCase() === cat.toLowerCase()
+                ))
+            )
+
+        }
+
+        // cat && setFilterProdcuts(
+        //     products.filter(item =>
+        //         Object.entries(filters).every(([key, value]) => {
+        //             return item[key].includes(value);
+        //         })
+        //     )
+        // )
+        if (search) {
+            const lowerSearch = search.toLowerCase();
+            tempProducts = tempProducts.filter(item =>
+                item.title.toLowerCase().includes(lowerSearch) ||
+                item.categories.some(categoryItem =>
+                    categoryItem.toLowerCase().includes(lowerSearch)
+                )
+            );
+        }
+        console.log(tempProducts)
+
+        setFilterProdcuts(tempProducts);
+
+    }, [cat, filters, products, search])
 
 
     useEffect(() => {
@@ -70,14 +108,24 @@ const Products = ({ cat, filters, sort }) => {
 
     return (
         <Container>
-            {cat ?
-                filterProdcuts.map(product => (
-                    <ProductItem key={product._id} product={product} />
-                ))
-                :
-                products.slice(0,8).map(product => (
-                    <ProductItem key={product._id} product={product} />
-                ))}
+            {cat && cat !== 'search' ?
+                (
+                    filterProdcuts.map(product => (
+                        <ProductItem key={product._id} product={product} />
+                    ))
+
+                )
+                : (
+                    filterProdcuts.length > 0 ?
+
+                        products.slice(0, 8).map(product => (
+                            <ProductItem key={product._id} product={product} />
+                        )) :
+                        (
+                            <NoProductsMessage>No products found for this search.</NoProductsMessage>
+                        )
+                )
+            }
         </Container>
     )
 }

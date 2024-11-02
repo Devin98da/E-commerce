@@ -39,7 +39,7 @@ const ProductList = () => {
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState("newest");
 
-    const cat = location.pathname.split("/")[2];
+    const cat = location.pathname.split("/")[3];
 
     const handleFilter = (e) => {
         const value = e.target.value;

@@ -88,10 +88,12 @@ const NavBar = () => {
             <Wrapper>
                 <Left>
                     <Language>EN</Language>
-                    <SearchInput/>
+                    <SearchInput />
                 </Left>
                 <Center>
-                    <Logo>Keema</Logo>
+                    <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Logo>Keema</Logo>
+                    </Link>
                 </Center>
                 <Right>
                     {

@@ -33,7 +33,8 @@ const Products = ({ cat, filters, sort, search }) => {
     const dispatch = useDispatch();
     const { products, isFetching, error } = useSelector((state) => state.products);
 
-    // console.log(products)
+    console.log(filters)
+    console.log(products)
 
     useEffect(() => {
 
@@ -67,6 +68,18 @@ const Products = ({ cat, filters, sort, search }) => {
 
         }
 
+        if(filters){
+            tempProducts = tempProducts.filter(item =>
+                Object.entries(filters).every(([key, value]) => {
+
+                    if(key === 'color' && value === 'Color') return true;
+
+                    if(key === 'size' && value === 'Size') return true;
+
+                    return item[key].includes(value);
+                })
+            )
+        }
         // cat && setFilterProdcuts(
         //     products.filter(item =>
         //         Object.entries(filters).every(([key, value]) => {
@@ -74,6 +87,8 @@ const Products = ({ cat, filters, sort, search }) => {
         //         })
         //     )
         // )
+
+
         if (search) {
             const lowerSearch = search.toLowerCase();
             tempProducts = tempProducts.filter(item =>
@@ -118,7 +133,7 @@ const Products = ({ cat, filters, sort, search }) => {
                 : (
                     filterProdcuts.length > 0 ?
 
-                        products.slice(0, 8).map(product => (
+                        filterProdcuts.slice(0, 8).map(product => (
                             <ProductItem key={product._id} product={product} />
                         )) :
                         (

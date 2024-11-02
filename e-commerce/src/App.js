@@ -15,12 +15,14 @@ import {
 import Success from './pages/Success';
 import { useSelector } from 'react-redux';
 import Search from './pages/Search';
+import ScrollTop from './ScrollTop';
 
 function App() {
   const user = useSelector(state => state.user.currentUser);
 
   return (
     <Router>
+      <ScrollTop />
       <Routes>
         <Route exact path='/' element={<Home />} />
         <Route path='/products/search' element={<Search />} />

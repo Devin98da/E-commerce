@@ -27,7 +27,7 @@ const NoProductsMessage = styled.p`
 `;
 
 
-const Products = ({ cat, filters, sort, search }) => {
+const Products = ({ cat, filters, sort, search, promotion }) => {
     // const [products, setProducts] = useState([]);
     const [filterProdcuts, setFilterProdcuts] = useState([]);
     const dispatch = useDispatch();
@@ -58,6 +58,12 @@ const Products = ({ cat, filters, sort, search }) => {
     useEffect(() => {
 
         let tempProducts = products;
+
+        if(promotion){
+            tempProducts = tempProducts.filter(item=>
+                item.promotion > 0
+            )
+        }
 
         if (cat && cat !== 'search') {
             tempProducts = tempProducts.filter(item =>

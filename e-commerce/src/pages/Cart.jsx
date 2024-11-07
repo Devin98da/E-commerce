@@ -9,7 +9,7 @@ import { mobile } from '../responsive'
 import { useSelector } from 'react-redux';
 import StripeCheckout from 'react-stripe-checkout';
 import { userRequest } from '../requestMethod';
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const KEY = "pk_test_51KqiRCKhjZiDhPCgP0Y8TdrpD77ox7mScf8KY1NNPJTQfL0jVAYU69Ntqj5RnfgCn7EZPxe9QOBHEsFx50mdWSYW008JFT1Ssi";
 
@@ -185,7 +185,9 @@ const Cart = () => {
             <Wrapper>
                 <Title>YOUR BAG</Title>
                 <Top>
-                    <TopButton>CONTINUE SHOPING</TopButton>
+                    <Link to={'/products'}>
+                        <TopButton>CONTINUE SHOPING</TopButton>
+                    </Link>
                     <TopTexts>
                         <TopText>Shoping Bag(2)</TopText>
                         <TopText>Your Wishlist(2)</TopText>

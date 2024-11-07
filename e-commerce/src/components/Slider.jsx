@@ -4,6 +4,7 @@ import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import { sliderItems } from '../data';
 import { mobile } from '../responsive';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
     width: 100%;
@@ -14,7 +15,7 @@ const Container = styled.div`
     margin-top:20px;
     ${mobile({ display: "none" })};
 `
-  
+
 const Arrow = styled.div`
     width:50px;
     height:50px;
@@ -102,7 +103,9 @@ const Slider = () => {
                         <InfoContainer>
                             <Title>{item.title}</Title>
                             <Description>{item.desc}</Description>
-                            <Button>SHOW NOW</Button>
+                            <Link to={'/products/promotions'}>
+                                <Button>SHOW NOW</Button>
+                            </Link>
                         </InfoContainer>
                     </Slide>
                 ))}

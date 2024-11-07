@@ -16,6 +16,7 @@ import Success from './pages/Success';
 import { useSelector } from 'react-redux';
 import Search from './pages/Search';
 import ScrollTop from './ScrollTop';
+import ProductPromotions from './pages/ProductPromotions';
 
 function App() {
   const user = useSelector(state => state.user.currentUser);
@@ -26,6 +27,7 @@ function App() {
       <Routes>
         <Route exact path='/' element={<Home />} />
         <Route path='/products/search' element={<Search />} />
+        <Route path='/products/promotions' element={<ProductList />} />
         <Route path='/products/category/:category' element={<ProductList />} />
         <Route path='/products/product/:category' element={<Product />} />
         <Route path='/cart' element={<Cart />} />

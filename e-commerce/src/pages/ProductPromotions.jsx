@@ -34,14 +34,12 @@ const Select = styled.select`
 `;
 const Option = styled.option``;
 
-const ProductList = () => {
+const ProductPromotions = () => {
     const location = useLocation();
     const [filters, setFilters] = useState({});
     const [sort, setSort] = useState("newest");
 
     const cat = location.pathname.split("/")[3];
-    const promotion = location.pathname.split("/")[2];
-    console.log(location.pathname)
 
     const handleFilter = (e) => {
         const value = e.target.value;
@@ -55,7 +53,7 @@ const ProductList = () => {
         <Container>
             <NavBar />
             <Announcement />
-            <Title>{promotion ? "Promotion" : cat}</Title>
+            <Title>{cat}</Title>
             <FilterContainer>
                 <Filter>
                     <FilterText>
@@ -95,11 +93,11 @@ const ProductList = () => {
                     </Select>
                 </Filter>
             </FilterContainer>
-            <Products cat={cat} filters={filters} sort={sort} promotion={promotion}/>
+            <Products cat={cat} filters={filters} sort={sort} />
             <NewsLetter />
             <Footer />
         </Container>
     )
 }
 
-export default ProductList
+export default ProductPromotions

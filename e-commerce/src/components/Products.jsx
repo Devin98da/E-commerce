@@ -26,12 +26,32 @@ const NoProductsMessage = styled.p`
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
+const LoadMoreButton = styled.button`
+     width: 100%;
+  padding: 10px;
+  margin: 20px 0;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`
+
 
 const Products = ({ cat, filters, sort, search, promotion }) => {
     // const [products, setProducts] = useState([]);
     const [filterProdcuts, setFilterProdcuts] = useState([]);
     const dispatch = useDispatch();
     const { products, isFetching, error } = useSelector((state) => state.products);
+    const[page,setPage] = useState(1);
+    const productsPerPage = 8;
 
     console.log(filters)
     console.log(products)
@@ -106,9 +126,9 @@ const Products = ({ cat, filters, sort, search, promotion }) => {
         }
         console.log(tempProducts)
 
-        setFilterProdcuts(tempProducts);
+        setFilterProdcuts(tempProducts.slice(0, page * productsPerPage));
 
-    }, [cat, filters, products, search])
+    }, [cat, filters, products, search, promotion, page])
 
 
     useEffect(() => {
@@ -127,6 +147,10 @@ const Products = ({ cat, filters, sort, search, promotion }) => {
         }
     }, [sort]);
 
+    const loadMore = () => {
+        setPage(prev=>prev+1);
+    }
+
     return (
         <Container>
             {cat && cat !== 'search' ?
@@ -139,7 +163,7 @@ const Products = ({ cat, filters, sort, search, promotion }) => {
                 : (
                     filterProdcuts.length > 0 ?
 
-                        filterProdcuts.slice(0, 8).map(product => (
+                        filterProdcuts.map(product => (
                             <ProductItem key={product._id} product={product} />
                         )) :
                         (
@@ -147,6 +171,12 @@ const Products = ({ cat, filters, sort, search, promotion }) => {
                         )
                 )
             }
+
+            {filterProdcuts.length < products.length && (
+                <LoadMoreButton onClick={loadMore}>
+                    Load More...
+                </LoadMoreButton>
+            )}
         </Container>
     )
 }

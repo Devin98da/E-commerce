@@ -6,10 +6,11 @@ import Footer from '../components/Footer'
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import { mobile } from '../responsive'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import StripeCheckout from 'react-stripe-checkout';
 import { userRequest } from '../requestMethod';
 import { Link, useNavigate } from 'react-router-dom'
+import { decreaseQuantity, increaseQuantity, removeProduct } from '../redux/cartRedux'
 
 const KEY = "pk_test_51KqiRCKhjZiDhPCgP0Y8TdrpD77ox7mScf8KY1NNPJTQfL0jVAYU69Ntqj5RnfgCn7EZPxe9QOBHEsFx50mdWSYW008JFT1Ssi";
 
@@ -147,17 +148,40 @@ const SummaryButton = styled.button`
     color:white;
     font-weight:600;
 `
+const RemoveButton = styled.button`
+    background-color: #ff6b6b;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-top:10px;
+
+    &:hover {
+        background-color: #ff4c4c;
+        transform: scale(1.05);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+`;
+
 
 const Cart = () => {
     const cart = useSelector(state => state.cart);
+    const wishlist = useSelector(state => state.wishlist);
     const [stripeToken, setStripeToken] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onToken = (token) => {
         setStripeToken(token);
     }
 
-    console.log(stripeToken)
 
     useEffect(() => {
         const makeRequest = async () => {
@@ -178,6 +202,18 @@ const Cart = () => {
 
     }, [stripeToken, cart.total, navigate])
 
+    const handleQuantityChange = (type, productId) => {
+        if (type === 'add') {
+            dispatch(increaseQuantity(productId));
+        } else if (type === 'dec') {
+            dispatch(decreaseQuantity(productId));
+        }
+    }
+
+    const handleRemoveProduct = (productId) => {
+        dispatch(removeProduct(productId));
+    }
+
     return (
         <Container>
             <NavBar />
@@ -189,16 +225,20 @@ const Cart = () => {
                         <TopButton>CONTINUE SHOPING</TopButton>
                     </Link>
                     <TopTexts>
-                        <TopText>Shoping Bag(2)</TopText>
-                        <TopText>Your Wishlist(2)</TopText>
+                        <TopText>Shoping Bag ({cart.products.length})</TopText>
+                        <Link style={{color: 'inherit'}} to="/wishlist">
+                            <TopText>Your Wishlist ({wishlist.products.length})</TopText>
+                        </Link>
+
                     </TopTexts>
-                    <TopButton type='filled'>CHECKOUT NOW</TopButton>
+                    <TopButton type='filled' disabled={cart.total === 0}>CHECKOUT NOW</TopButton>
+
                 </Top>
                 <Bottom>
                     <Info>
                         {cart.products && cart.products.length > 0 ?
                             cart.products.map(product => (
-                                <Product>
+                                <Product key={product._id}>
                                     <ProductDetail>
                                         <Image src={product.image} />
                                         <Details>
@@ -217,11 +257,15 @@ const Cart = () => {
 
                                     <PriceDetail>
                                         <ProductAmountContainer>
-                                            <RemoveIcon />
+                                            <RemoveIcon onClick={() => handleQuantityChange('dec', product._id)} />
                                             <ProductAmount>{product.quantity}</ProductAmount>
-                                            <AddIcon />
+                                            <AddIcon onClick={() => handleQuantityChange('add', product._id)} />
                                         </ProductAmountContainer>
-                                        <ProductPrice>${product.price * product.quantity}</ProductPrice>
+                                        <ProductPrice>${product.promotion > 0 ?
+                                            product.discountPrice * product.quantity
+                                            : product.price * product.quantity}
+                                        </ProductPrice>
+                                        <RemoveButton onClick={() => handleRemoveProduct(product._id)}>Remove</RemoveButton>
                                     </PriceDetail>
                                 </Product>
                             )) : (

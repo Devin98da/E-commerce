@@ -22,6 +22,7 @@ const Wrapper = styled.div`
 `
 const ImageContainer = styled.div`
     flex:1;
+    position:relative;
 `
 const Image = styled.img`
     width:100%;
@@ -43,7 +44,7 @@ const Desc = styled.p`
 `
 const Price = styled.span`
     font-weight:100;
-    font-size:40px;
+    font-size:35px;
 `
 const FilterContainer = styled.div`
     display:flex;
@@ -108,6 +109,28 @@ const Button = styled.button`
         background-color: #f8f4f4;
     }
 `
+const PriceCotainer = styled.div`
+    display:flex;
+    flex-direction:column;
+`
+const DiscountPrice = styled.span`
+    font-weight:500;
+    font-size:40px;
+    color: teal;
+`;
+
+const PromoBadge = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff5252;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  z-index: 4;
+`
 const Product = () => {
 
     const location = useLocation();
@@ -117,7 +140,7 @@ const Product = () => {
     const [size, setSize] = useState(null);
     const dispatch = useDispatch();
 
-    const id = location.pathname.split("/")[2];
+    const id = location.pathname.split("/")[3];
 
     useEffect(() => {
         const getProduct = async () => {
@@ -139,9 +162,11 @@ const Product = () => {
 
     const handleAddToCart = () => {
         dispatch(
-            addProduct({ ...product, quantity, color, size})
+            addProduct({ ...product, quantity, color, size })
         )
     }
+
+    console.log(product)
 
     return (
         <Contaienr>
@@ -149,6 +174,8 @@ const Product = () => {
             <Announcement />
             <Wrapper>
                 <ImageContainer>
+                    {product.promotion > 0 &&
+                        <PromoBadge>{product.promotion}%OFF</PromoBadge>}
                     <Image src={product.image} />
                 </ImageContainer>
                 <InfoContainer>
@@ -156,7 +183,20 @@ const Product = () => {
                     <Desc>
                         {product.description}
                     </Desc>
-                    <Price>$ {product.price}</Price>
+                    {product.promotion > 0 ? (
+                        <PriceCotainer>
+                            <Price style={{ textDecoration: "line-through", color: "grey" }}>
+                                ${product.price}
+                            </Price>
+                            <DiscountPrice>${product?.discountPrice}</DiscountPrice>
+                            <span style={{ color: "red", marginLeft: "10px" }}>
+                                ({product.promotion}% OFF)
+                            </span>
+                        </PriceCotainer>
+                    ) : (
+                        <Price>${product.price}</Price>
+                    )}
+
                     <FilterContainer>
                         <Filter>
                             <FilterTitle>Color</FilterTitle>

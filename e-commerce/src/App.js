@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import Search from './pages/Search';
 import ScrollTop from './ScrollTop';
 import ProductPromotions from './pages/ProductPromotions';
+import Wishlist from './pages/Wishlist';
 
 function App() {
   const user = useSelector(state => state.user.currentUser);
@@ -28,9 +29,11 @@ function App() {
         <Route exact path='/' element={<Home />} />
         <Route path='/products/search' element={<Search />} />
         <Route path='/products/promotions' element={<ProductList />} />
+        <Route path='/products' element={<ProductList />} />
         <Route path='/products/category/:category' element={<ProductList />} />
-        <Route path='/products/product/:category' element={<Product />} />
+        <Route path='/products/product/:id' element={<Product />} />
         <Route path='/cart' element={<Cart />} />
+        <Route path='/wishlist' element={<Wishlist />} />
         <Route path='/success' element={<Success />} />
         <Route path='/register' element={user ? <Navigate to="/" /> : <Regiser />} />
         <Route path='/login' element={user ? <Navigate to="/" /> : <Login />} />
